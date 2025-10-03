@@ -1,52 +1,41 @@
-Beautiful Funerals Website
-A professional funeral services website with complete backend administration system.
+markdown
+# Beautiful Funerals Website
 
-Features
-Frontend Features
-Responsive Design: Mobile-optimized with Tailwind CSS
+A professional funeral services website with complete backend administration system and file upload capabilities.
 
-Professional Dark Theme: Black, white, and silver color scheme
+## Features
 
-Service Pages: Traditional funerals, cremation, pre-planning
+### Frontend Features
+- **Responsive Design**: Mobile-optimized with Tailwind CSS
+- **Professional Dark Theme**: Black, white, and silver color scheme
+- **Service Pages**: Traditional funerals, cremation, pre-planning
+- **Upcoming Services**: Live service listings with livestream links
+- **Blog System**: Grief support and educational content
+- **Contact Forms**: Arrangement requests and general inquiries
+- **SEO Optimized**: Proper meta tags and structure
 
-Upcoming Services: Live service listings with livestream links
+### Backend Features
+- **Admin Dashboard**: Complete content management system
+- **Service Management**: Add/edit/delete upcoming services
+- **Blog Management**: Create and manage blog posts
+- **Form Management**: View arrangement requests and messages
+- **File Upload System**: Secure image upload for blog posts and content
+- **Secure Authentication**: Admin login system
+- **RESTful API**: JSON API for all data operations
 
-Blog System: Grief support and educational content
+## Installation
 
-Contact Forms: Arrangement requests and general inquiries
+### Prerequisites
+- Web server with PHP 7.4+
+- MySQL 5.7+ or MariaDB 10.3+
+- Apache with mod_rewrite enabled
+- PHP extensions: PDO, MySQL, FileInfo
 
-SEO Optimized: Proper meta tags and structure
-
-Backend Features
-Admin Dashboard: Complete content management system
-
-Service Management: Add/edit/delete upcoming services
-
-Blog Management: Create and manage blog posts
-
-Form Management: View arrangement requests and messages
-
-File Upload: Image upload for blog posts and content
-
-Secure Authentication: Admin login system
-
-RESTful API: JSON API for all data operations
-
-Installation
-Prerequisites
-Web server with PHP 7.4+
-
-MySQL 5.7+ or MariaDB 10.3+
-
-Apache with mod_rewrite enabled
-
-Step 1: Database Setup
-Create a MySQL database
-
-Import the database.sql file:
-
-bash
-mysql -u username -p database_name < database.sql
+### Step 1: Database Setup
+1. Create a MySQL database
+2. Import the `database.sql` file:
+   ```bash
+   mysql -u username -p database_name < database.sql
 Update database credentials in config.php
 
 Step 2: File Upload
@@ -55,8 +44,13 @@ Upload all files to your web server
 Set proper file permissions:
 
 bash
-chmod 755 $(find . -type d)
-chmod 644 $(find . -type f)
+# Set directory permissions
+find . -type d -exec chmod 755 {} \;
+
+# Set file permissions
+find . -type f -exec chmod 644 {} \;
+
+# Set upload directory permissions
 chmod 777 assets/uploads/
 Step 3: Configuration
 Update database settings in config.php:
@@ -81,7 +75,7 @@ Proper .htaccess support
 
 PHP with PDO MySQL extension
 
-File uploads enabled
+File uploads enabled (check php.ini)
 
 Default Login Credentials
 Admin Panel: /admin/login.php
@@ -154,18 +148,46 @@ GET /api/messages.php - Get messages (admin only)
 
 POST /api/messages.php - Submit contact message
 
-File Upload
-POST /api/upload.php - Upload files (images only, admin only)
+File Upload System
+Upload Endpoint
+POST /api/upload.php - Upload files (admin authentication required)
 
-Upload Parameters:
+Upload Parameters
+file (required): The file to upload (multipart/form-data)
 
-file (required): The file to upload
+Supported File Types
+Images: JPEG, PNG, GIF, WebP
 
-Supported File Types:
+Maximum File Size: 5MB
 
-JPEG, PNG, GIF, WebP
+Security: File type validation, size limits, and virus scanning
 
-Maximum file size: 5MB
+Upload Response
+json
+{
+    "success": true,
+    "message": "File uploaded successfully",
+    "filePath": "/assets/uploads/unique_filename.jpg",
+    "fileName": "unique_filename.jpg"
+}
+Error Responses
+json
+{
+    "success": false,
+    "message": "Error description"
+}
+Upload Security Features
+File type validation using MIME types
+
+File size restrictions
+
+Unique filename generation to prevent overwrites
+
+Directory traversal protection
+
+Admin authentication required
+
+File extension validation
 
 Database Schema
 Main Tables
@@ -182,21 +204,42 @@ contact_messages - General contact messages
 condolences - Condolence messages for services
 
 Security Features
-Password hashing with bcrypt
+Password Security: bcrypt hashing
 
-SQL injection prevention with PDO prepared statements
+SQL Injection Prevention: PDO prepared statements
 
-XSS protection with input sanitization
+XSS Protection: Input sanitization and output escaping
 
-CSRF protection in forms
+CSRF Protection: Form tokens and validation
 
-Session-based authentication
+Session Security: Secure session management
 
-Secure file upload validation
+File Upload Security: Type validation, size limits, virus scanning
 
-HTTPS enforcement
+HTTPS Enforcement: SSL/TLS required
 
-Security headers
+Security Headers: XSS, HSTS, frame options
+
+Input Validation: Server-side validation for all inputs
+
+File Upload Configuration
+PHP Configuration (php.ini)
+ini
+file_uploads = On
+upload_max_filesize = 10M
+post_max_size = 10M
+max_file_uploads = 20
+max_execution_time = 300
+max_input_time = 300
+memory_limit = 256M
+Upload Directory Security
+Directory permissions: 755 (readable, not executable)
+
+File permissions: 644 (readable, not executable)
+
+.htaccess protection against direct PHP execution
+
+Regular security scans
 
 Customization
 Styling
@@ -213,12 +256,14 @@ tailwind.config = {
         }
     }
 }
-Content
+Content Management
 Update company information in index.html
 
 Modify service packages in the pricing section
 
-Add your own images and content
+Add images via the admin panel upload system
+
+Manage all content through the admin dashboard
 
 Maintenance
 Regular Tasks
@@ -230,93 +275,149 @@ Monitor error logs
 
 Review and update content
 
-Troubleshooting
-500 Internal Server Error
+Check upload directory for unauthorized files
 
-Check file permissions
+Update security patches
 
-Verify .htaccess is working
+Troubleshooting Guide
+1. File Upload Issues
+Problem: "Failed to upload file" or "Invalid file type"
 
-Check PHP error logs
+Solution: Check assets/uploads/ directory permissions (should be 777)
 
-Database Connection Error
+Solution: Verify file type and size (max 5MB, images only)
 
-Verify credentials in config.php
+Solution: Check PHP error logs for upload errors
 
-Check database server is running
+2. Database Connection Error
+Solution: Verify credentials in config.php
 
-Ensure database exists
+Solution: Check database server is running
 
-API Not Working
+Solution: Ensure database exists and user has permissions
 
-Ensure mod_rewrite is enabled
+3. API Not Working
+Solution: Ensure mod_rewrite is enabled
 
-Check API file permissions
+Solution: Check API file permissions (644)
 
-Verify CORS headers
+Solution: Verify .htaccess is in root directory
 
-File Upload Issues
+4. Admin Login Issues
+Solution: Verify database has default admin user
 
-Check assets/uploads/ directory permissions (should be 777)
+Solution: Check session configuration
 
-Verify PHP file upload settings
+Solution: Clear browser cache and cookies
 
-Check file size and type restrictions
+5. 500 Internal Server Error
+Solution: Check file permissions
 
-Admin Login Issues
+Solution: Verify .htaccess syntax
 
-Verify database has default admin user
+Solution: Check PHP error logs
 
-Check session configuration
+6. Images Not Displaying
+Solution: Verify upload directory permissions
 
-Verify password hashing
+Solution: Check file paths in database
+
+Solution: Ensure images are uploaded via admin panel
 
 Support
 For technical support or questions:
 
-Check the error logs in your hosting control panel
+Check Error Logs: Review PHP and server error logs
 
-Verify all file permissions are set correctly
+Verify Permissions: Ensure all file permissions are correct
 
-Ensure all database tables were created properly
+Database Check: Confirm all tables exist and are accessible
 
-Check that PHP extensions (PDO, MySQL) are enabled
+PHP Extensions: Verify PDO, MySQL, and FileInfo extensions are enabled
+
+Upload Test: Test file upload functionality in admin panel
+
+Backup Procedures
+Database Backup
+bash
+mysqldump -u username -p database_name > backup.sql
+File Backup
+bash
+tar -czf website_backup.tar.gz beautiful-funerals/
+Upload Directory Backup
+bash
+tar -czf uploads_backup.tar.gz assets/uploads/
+Security Best Practices
+Regular Updates: Keep PHP, MySQL, and all dependencies updated
+
+Password Policy: Use strong, unique passwords for admin accounts
+
+File Monitoring: Regularly check upload directory for suspicious files
+
+Access Logs: Monitor access logs for unusual activity
+
+SSL Certificate: Maintain valid SSL certificate
+
+Backup Strategy: Implement regular backup procedures
 
 License
-This project is licensed for use by Beautiful Funerals.
+This project is licensed for use by Beautiful Funerals. All rights reserved.
 
 Changelog
+v1.1.0
+Added secure file upload system
+
+Enhanced admin panel with image management
+
+Improved error handling and validation
+
+Added comprehensive security features
+
 v1.0.0
 Initial release
 
 Complete frontend and backend system
 
-Admin dashboard with file upload
+Admin dashboard
 
 API endpoints
 
 Database structure
 
-Quick Start for CPanel Deployment
-Upload Files via File Manager or FTP
+Quick Deployment Checklist
+Pre-Deployment
+Database created and configured
 
-Create Database in MySQL Databases
+File permissions set correctly
 
-Import SQL via phpMyAdmin
+Configuration files updated
 
-Update Config in config.php
+SSL certificate installed
 
-Set Permissions:
+Domain configured
 
-Folders: 755
+Post-Deployment
+Admin login tested
 
-Files: 644
+File upload functionality verified
 
-assets/uploads/: 777
+All forms submitting correctly
 
-Test Website at your domain
+Mobile responsiveness confirmed
 
-Login to Admin at /admin/login.php
+SEO meta tags validated
 
-The system is now ready for production use!
+Security Checklist
+Default admin password changed
 
+File upload restrictions working
+
+HTTPS enforced
+
+Error reporting disabled in production
+
+Regular backup schedule established
+
+Need Help? Contact your web developer or refer to the troubleshooting section above.
+
+Emergency Contact: For critical issues, contact your hosting provider and web development team immediately.
