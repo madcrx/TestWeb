@@ -1,0 +1,68 @@
+
+## Additional Files Needed
+
+### `assets/css/style.css`
+```css
+/* Custom styles for Beautiful Funerals */
+.hero-bg {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.section-bg {
+    background-color: #1a1a1a;
+}
+
+.card-bg {
+    background-color: #2a2a2a;
+}
+
+.nav-transparent {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.nav-solid {
+    background-color: #000;
+}
+
+.transition-all {
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #C0C0C0;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #a8a8a8;
+}
+
+/* Mobile menu animations */
+.mobile-menu-enter {
+    transform: translateY(-100%);
+}
+
+.mobile-menu-enter-active {
+    transform: translateY(0);
+    transition: transform 0.3s ease;
+}
+
+/* Loading states */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Form styles */
+.form-input {
+    background-color: #000;
+    border: 1px solid #C0C0C0;
+    color: white;
+}
+
+.form-input:focus {
+    border-color: white;
+    outline: none;
+}
