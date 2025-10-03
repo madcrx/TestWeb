@@ -17,19 +17,32 @@ Header always set X-Content-Type-Options nosniff
 Header always set X-Frame-Options DENY
 Header always set X-XSS-Protection "1; mode=block"
 Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
 # CORS for API
 Header always set Access-Control-Allow-Origin "*"
 Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
+Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+# File upload limits
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+php_value max_input_time 300
 
 # Cache static assets
-<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg|webp)$">
     Header set Cache-Control "max-age=2592000, public"
 </FilesMatch>
 
 # Protect sensitive files
-<FilesMatch "^(\.htaccess|\.htpasswd|\.env|config\.php|database\.php)$">
+<FilesMatch "^(\.htaccess|\.htpasswd|\.env|config\.php|database\.php|auth-check\.php)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Protect upload directory from direct execution
+<FilesMatch "\.(php|phtml|php3|php4|php5|phps|pl|py|jsp|asp|sh|cgi)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
@@ -38,3 +51,7 @@ Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.html [L,QSA]
+
+# Custom error pages
+ErrorDocument 404 /index.html
+ErrorDocument 500 /index.html
